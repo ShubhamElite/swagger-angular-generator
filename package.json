@@ -1,5 +1,5 @@
 {
-  "name": "swagger-angular-generator",
+  "name": "@sange/swagger-angular-generator",
   "version": "1.3.1",
   "description": "Generator of API layer in TypeScript for Angular 2+ apps",
   "main": "dist/generate.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jnwltr/swagger-angular-generator.git"
+    "url": "git+ssh://git@github.com/sangecz/swagger-angular-generator.git"
   },
   "keywords": [
     "swagger",
@@ -31,12 +31,12 @@
     "generator",
     "angular"
   ],
-  "author": "Jan Walter",
+  "author": "Petr Marek",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jnwltr/swagger-angular-generator/issues"
+    "url": "https://github.com/sangecz/swagger-angular-generator/issues"
   },
-  "homepage": "https://github.com/jnwltr/swagger-angular-generator#readme",
+  "homepage": "https://github.com/sangecz/swagger-angular-generator#readme",
   "dependencies": {
     "commander": "^2.12.2",
     "lodash": "^4.17.4"
