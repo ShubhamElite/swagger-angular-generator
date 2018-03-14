@@ -45,7 +45,7 @@ function processMethod(method) {
     methodDef += utils_1.indent(paramSeparation);
     if (paramSeparation.length)
         methodDef += '\n';
-    const body = `return this.http.${method.methodName}<${method.responseDef.type}>(\`${url}\`${params});`;
+    const body = `return this.http.${method.methodName}<${method.responseDef.type}>(\`${url}\`${params})`;
     methodDef += utils_1.indent(body);
     methodDef += `\n`;
     methodDef += `}`;
@@ -82,37 +82,42 @@ function getParamSeparation(paramGroups) {
         let def;
         if (groupName === 'query') {
             const list = _.map(group, p => `${p.name}: params.${p.name},`);
-            baseDef = '{\n' + utils_1.indent(list) + '\n};';
+            baseDef = '{\n' + utils_1.indent(list) + '\n}';
             def = `const queryParamBase = ${baseDef}\n\n`;
-            def += 'let queryParams = new HttpParams();\n';
+            def += 'let queryParams = new HttpParams()\n';
             def += 'Object.entries(queryParamBase).forEach(([key, value]) => {\n';
             def += '  if (value !== undefined) {\n';
-            def += '    if (typeof value === \'string\') queryParams = queryParams.set(key, value);\n';
-            def += '    else queryParams = queryParams.set(key, JSON.stringify(value));\n';
+            def += '    if (typeof value === \'string\') {\n';
+            def += '      queryParams = queryParams.set(key, value)\n';
+            def += '    } else {\n';
+            def += '       queryParams = queryParams.set(key, JSON.stringify(value))\n';
+            def += '    }\n';
             def += '  }\n';
-            def += '});\n';
+            def += '})\n';
             return def;
         }
         if (groupName === 'body') {
             // when the schema: { '$ref': '#/definitions/exampleDto' } construct is used
             if ('schema' in group[0]) {
-                def = `params.${group[0].name};`;
+                def = `params.${group[0].name}`;
             }
             else {
                 const list = _.map(group, p => `${p.name}: params.${p.name},`);
-                def = '{\n' + utils_1.indent(list) + '\n};';
+                def = '{\n' + utils_1.indent(list) + '\n}';
             }
             // bodyParams keys with value === undefined are removed
             let res = `const ${groupName}Params = ${def}\n`;
-            res += 'const bodyParamsWithoutUndefined: any = {};\n';
+            res += 'const bodyParamsWithoutUndefined: any = {}\n';
             res += 'Object.entries(bodyParams || {}).forEach(([key, value]) => {\n';
-            res += '  if (value !== undefined) bodyParamsWithoutUndefined[key] = value;\n';
-            res += '});';
+            res += '  if (value !== undefined) {\n';
+            res += '    bodyParamsWithoutUndefined[key] = value\n';
+            res += '  }';
+            res += '})';
             return res;
         }
         else {
             const list = _.map(group, p => `${p.name}: params.${p.name},`);
-            def = '{\n' + utils_1.indent(list) + '\n};';
+            def = '{\n' + utils_1.indent(list) + '\n}';
         }
         return `const ${groupName}Params = ${def}`;
     });

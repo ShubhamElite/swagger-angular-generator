@@ -3,6 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const conf = require("./conf");
 const utils_1 = require("./utils");
+const getEnumable = (prop) => {
+    if (!prop.description) {
+        return false;
+    }
+    try {
+        const withoutPrefix = prop.description.split('[')[1];
+        const arrayLike = withoutPrefix.split(']')[0];
+        const words = arrayLike.match(/\w+/g);
+        const vals = words.filter((_, idx) => idx % 2 === 0);
+        const keys = words.filter((_, idx) => idx % 2 === 1);
+        const enumObj = keys.reduce((acc, cur, idx) => {
+            acc[cur] = vals[idx];
+            return acc;
+        }, {});
+        return { enumObj };
+    }
+    catch (error) {
+        return false;
+    }
+};
 /**
  * Processes one property of the type
  * @param prop property definition
@@ -21,7 +41,14 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
             type += 'Enum';
         const list = prop.enum || prop.items.enum;
         const exp = exportEnums ? 'export ' : '';
-        enumDeclaration = `${exp}type ${type} =\n` + utils_1.indent('\'' + list.join('\' |\n\'')) + '\';';
+        const enumable = getEnumable(prop);
+        if (!enumable) {
+            enumDeclaration = `${exp}type ${type} =\n` + utils_1.indent('\'' + list.join('\' |\n\'')) + '\'';
+        }
+        else {
+            const lines = Object.entries(enumable.enumObj).map(([key, val]) => `${key} = '${val}',`);
+            enumDeclaration = `${exp}enum ${type} {\n` + utils_1.indent(lines) + '\n}';
+        }
         if (prop.type === 'array')
             type += '[]';
     }
@@ -77,7 +104,7 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
     if (name) {
         if (name.match(/-/))
             name = `'${name}'`;
-        property = `${comment}${name}${optional}: ${type};`;
+        property = `${comment}${name}${optional}: ${type}`;
     }
     else
         property = `${type}`;
