@@ -102,7 +102,7 @@ function getParamSeparation(paramGroups: Dictionary<Parameter[]>): string[] {
       def += '      queryParams = queryParams.set(key, value)\n';
       def += '    } else {\n';
       def +='       queryParams = queryParams.set(key, JSON.stringify(value))\n';
-      def += '    }';
+      def += '    }\n';
       def += '  }\n';
       def += '})\n';
 
