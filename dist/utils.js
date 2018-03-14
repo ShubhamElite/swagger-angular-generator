@@ -124,4 +124,13 @@ function out(text, color) {
     process.stdout.write(`${text}\n`);
 }
 exports.out = out;
+/**
+ * camelCaseToDash('userId') => "user-id"
+ * camelCaseToDash('waitAMoment') => "wait-a-moment"
+ * camelCaseToDash('TurboPascal') => "turbo-pascal"
+ */
+function camelCaseToDash(str) {
+    return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
+}
+exports.camelCaseToDash = camelCaseToDash;
 //# sourceMappingURL=utils.js.map

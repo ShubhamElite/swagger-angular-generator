@@ -1,7 +1,7 @@
 import {HttpClientModule, HttpRequest} from '@angular/common/http';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {async, inject, TestBed} from '@angular/core/testing';
-import {RegistrationService} from '../../../generated/controllers/Registration';
+import {RegistrationService} from '../../../generated/services/registration.service';
 
 describe(`LoginService`, () => {
 

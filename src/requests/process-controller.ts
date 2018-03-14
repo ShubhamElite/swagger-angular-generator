@@ -7,7 +7,7 @@ import * as path from 'path';
 
 import * as conf from '../conf';
 import {Config} from '../generate';
-import {indent, writeFile} from '../utils';
+import {camelCaseToDash, indent, writeFile} from '../utils'
 import {processMethod} from './process-method';
 import {processResponses} from './process-responses';
 import {ControllerMethod} from './requests.models';
@@ -18,7 +18,7 @@ import {ControllerMethod} from './requests.models';
  * @param name
  */
 export function processController(methods: ControllerMethod[], name: string, config: Config) {
-  const filename = path.join(config.dest, conf.apiDir, `${name}.ts`);
+  const filename = path.join(config.dest, conf.apiDir, `${camelCaseToDash(name)}.service.ts`);
   let usesGlobalType = false;
 
   // make simpleNames unique and process responses

@@ -1,7 +1,7 @@
 import {HttpClientModule, HttpRequest} from '@angular/common/http';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {async, inject, TestBed} from '@angular/core/testing';
-import {CareerService} from '../../../generated/controllers/Career';
+import {CareerService} from '../../../generated/services/career.service';
 
 describe(`CareerDetailService`, () => {
   beforeEach(() => {

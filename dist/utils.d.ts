@@ -43,3 +43,9 @@ export declare const termColors: TermColors;
  * @param color
  */
 export declare function out(text: string | string[], color?: Color): void;
+/**
+ * camelCaseToDash('userId') => "user-id"
+ * camelCaseToDash('waitAMoment') => "wait-a-moment"
+ * camelCaseToDash('TurboPascal') => "turbo-pascal"
+ */
+export declare function camelCaseToDash(str: string): string;

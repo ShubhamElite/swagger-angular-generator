@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // relative to project root
 exports.outDir = 'src/api';
-exports.defsDir = 'defs';
-exports.apiDir = 'controllers';
+exports.defsDir = 'models';
+exports.apiDir = 'services';
 exports.apiFile = 'conf/api/api-docs.json';
 exports.modelFile = 'model';
 exports.indentation = 2;

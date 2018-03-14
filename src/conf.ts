@@ -3,8 +3,8 @@ import {MethodName, NativeNames} from './types';
 
 // relative to project root
 export const outDir = 'src/api';
-export const defsDir = 'defs';
-export const apiDir = 'controllers';
+export const defsDir = 'models';
+export const apiDir = 'services';
 export const apiFile = 'conf/api/api-docs.json';
 export const modelFile = 'model';
 export const indentation = 2;

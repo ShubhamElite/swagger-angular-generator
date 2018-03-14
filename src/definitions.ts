@@ -9,7 +9,7 @@ import {normalizeDef, processProperty} from './common';
 import * as conf from './conf';
 import {Config} from './generate';
 import {Schema} from './types';
-import {emptyDir, indent, writeFile} from './utils';
+import {camelCaseToDash, emptyDir, indent, writeFile} from './utils'
 
 export interface Definition {
   properties: {
@@ -42,7 +42,7 @@ export function processDefinitions(defs: { [key: string]: Definition }, config: 
     allExports += createExport(def) + createExportComments(def, sources) + '\n';
   });
 
-  const filename = path.join(config.dest, `${conf.modelFile}.ts`);
+  const filename = path.join(config.dest, `${camelCaseToDash(conf.modelFile)}.ts`);
   writeFile(filename, allExports, config.header);
 }
 
@@ -72,7 +72,7 @@ function processDefinition(def: Definition, name: string, config: Config): strin
   const enumLines = _.map(properties, 'enumDeclaration').filter(Boolean).join('\n\n');
   if (enumLines) output += `\n${enumLines}\n`;
 
-  const filename = path.join(config.dest, conf.defsDir, `${name}.ts`);
+  const filename = path.join(config.dest, conf.defsDir, `${camelCaseToDash(name)}.ts`);
   writeFile(filename, output, config.header);
 
   return name;
@@ -83,7 +83,7 @@ function processDefinition(def: Definition, name: string, config: Config): strin
  * @param def name of the definition file w/o extension
  */
 function createExport(def: string): string {
-  return `export * from './${conf.defsDir}/${def}'`;
+  return `export * from './${conf.defsDir}/${camelCaseToDash(def)}'`;
 }
 
 /**

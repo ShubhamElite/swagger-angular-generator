@@ -2,7 +2,7 @@ import {HttpClientModule, HttpRequest} from '@angular/common/http';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {async, inject, TestBed} from '@angular/core/testing';
 
-import {OrderService} from '../../../generated/controllers/Order';
+import {OrderService} from '../../../generated/services/order.service';
 
 describe(`OrderService`, () => {
   beforeEach(() => {

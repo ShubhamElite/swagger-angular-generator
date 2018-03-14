@@ -16,7 +16,7 @@ const process_responses_1 = require("./process-responses");
  * @param name
  */
 function processController(methods, name, config) {
-    const filename = path.join(config.dest, conf.apiDir, `${name}.ts`);
+    const filename = path.join(config.dest, conf.apiDir, `${utils_1.camelCaseToDash(name)}.service.ts`);
     let usesGlobalType = false;
     // make simpleNames unique and process responses
     const simpleNames = _.map(methods, 'simpleName');

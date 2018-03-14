@@ -5,7 +5,7 @@
  * example.com/swagger
  */
 
-export * from './defs/Products' // sources: products
-export * from './defs/ProductDetail' // sources: productDetail
-export * from './defs/OrderDto' // sources: orderDto
-export * from './defs/LoginDto' // sources: loginDto
+export * from './models/products' // sources: products
+export * from './models/product-detail' // sources: productDetail
+export * from './models/order-dto' // sources: orderDto
+export * from './models/login-dto' // sources: loginDto

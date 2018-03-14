@@ -128,3 +128,12 @@ export function out(text: string | string[], color?: Color) {
 
   process.stdout.write(`${text}\n`);
 }
+
+/**
+ * camelCaseToDash('userId') => "user-id"
+ * camelCaseToDash('waitAMoment') => "wait-a-moment"
+ * camelCaseToDash('TurboPascal') => "turbo-pascal"
+ */
+export function camelCaseToDash (str: string) {
+  return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+}

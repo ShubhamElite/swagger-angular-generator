@@ -31,7 +31,7 @@ function processDefinitions(defs, config) {
     _.forOwn(files, (sources, def) => {
         allExports += createExport(def) + createExportComments(def, sources) + '\n';
     });
-    const filename = path.join(config.dest, `${conf.modelFile}.ts`);
+    const filename = path.join(config.dest, `${utils_1.camelCaseToDash(conf.modelFile)}.ts`);
     utils_1.writeFile(filename, allExports, config.header);
 }
 exports.processDefinitions = processDefinitions;
@@ -59,7 +59,7 @@ function processDefinition(def, name, config) {
     const enumLines = _.map(properties, 'enumDeclaration').filter(Boolean).join('\n\n');
     if (enumLines)
         output += `\n${enumLines}\n`;
-    const filename = path.join(config.dest, conf.defsDir, `${name}.ts`);
+    const filename = path.join(config.dest, conf.defsDir, `${utils_1.camelCaseToDash(name)}.ts`);
     utils_1.writeFile(filename, output, config.header);
     return name;
 }
@@ -68,7 +68,7 @@ function processDefinition(def, name, config) {
  * @param def name of the definition file w/o extension
  */
 function createExport(def) {
-    return `export * from './${conf.defsDir}/${def}'`;
+    return `export * from './${conf.defsDir}/${utils_1.camelCaseToDash(def)}'`;
 }
 /**
  * Creates comment naming source definitions for the export
