@@ -1,46 +1,50 @@
 ## Forked from [swagger-angular-generator](https://github.com/jnwltr/swagger-angular-generator)
 ### Changes
 - instead of types with numeric values in string => true enums based on description
-for a given API method parameter:
-```
-...
-{
-  "name": "objectType",
-  "in": "query",
-  "description": "The object type Options: [0 = Undefined, 1 = Category, 2 = Article]",
-  "required": true,
-  "type": "integer",
-  "format": "int32",
-  "enum": [0, 1, 2]
-},
-...
-```
-instead of this output:
-```
-export type ObjectTypeTagsParamsEnum =
-  '0' |
-  '1' |
-  '2'
-```
-it will create:
-```
-export enum ObjectTypeTagsParamsEnum {
-  Undefined = '0',
-  Category = '1',
-  Article = '2',
-}
-```
-This will give you convinient usage in eg. switch case where instead of:
-```
-case '1':
-```
-you can reference enum like that:
+    for a given API method parameter:
+    ```
+    ...
+    {
+      "name": "objectType",
+      "in": "query",
+      "description": "The object type Options: [0 = Undefined, 1 = Category, 2 = Article]",
+      "required": true,
+      "type": "integer",
+      "format": "int32",
+      "enum": [0, 1, 2]
+    },
+    ...
+    ```
+    instead of this output:
+    ```
+    export type ObjectTypeTagsParamsEnum =
+      '0' |
+      '1' |
+      '2'
+    ```
+    it will create:
+    ```
+    export enum ObjectTypeTagsParamsEnum {
+      Undefined = '0',
+      Category = '1',
+      Article = '2',
+    }
+    ```
+    This will give you convinient usage in eg. switch case where instead of:
+    ```
+    case '1':
+    ```
+    you can reference enum like that:
 
-```
-case ObjectTypeTagsParamsEnum.Category:
-```
+    ```
+    case ObjectTypeTagsParamsEnum.Category:
+    ```
 - removed semicolons from generated code
 - added curly braces around conditional statements
+- renamed (to be compatible with Angular naming conventions):
+  - dirs `defs` -> `models` and `controllers` -> `services`
+  - appending `.service.ts` to services
+  - file names to dashed-style instead of CamelCase
 
 ## Purpose
 
