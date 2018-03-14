@@ -55,7 +55,7 @@ export function processProperty(prop: Schema, name = '', namespace = '',
 
     const enumable = getEnumable(prop);
     if (!enumable) {
-      enumDeclaration = `${exp}type ${type} =\n` + indent('\'' + list.join('\' |\n\'')) + '\';';
+      enumDeclaration = `${exp}type ${type} =\n` + indent('\'' + list.join('\' |\n\'')) + '\'';
     } else {
       const lines = Object.entries(enumable.enumObj).map(([key, val]) => `${key} = '${val}',`);
       enumDeclaration = `${exp}enum ${type} {\n` + indent(lines) + '\n}';
