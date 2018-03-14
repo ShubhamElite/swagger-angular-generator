@@ -41,13 +41,13 @@ export function processController(methods: ControllerMethod[], name: string, con
   if (processedMethods.some(c => c.usesQueryParams)) {
     angularCommonHttp.push('HttpParams');
   }
-  content += `import {${angularCommonHttp.join(', ')}} from \'@angular/common/http\';\n`;
+  content += `import { ${angularCommonHttp.join(', ')} } from \'@angular/common/http\'\n`;
 
-  content += 'import {Injectable} from \'@angular/core\';\n';
-  content += 'import {Observable} from \'rxjs/Observable\';\n\n';
+  content += 'import { Injectable } from \'@angular/core\'\n';
+  content += 'import { Observable } from \'rxjs/Observable\'\n\n';
 
   if (usesGlobalType) {
-    content += `import * as ${conf.modelFile} from \'../${conf.modelFile}\';\n\n`;
+    content += `import * as ${conf.modelFile} from \'../${conf.modelFile}\'\n\n`;
   }
 
   const interfaceDef = _.map(processedMethods, 'interfaceDef').filter(Boolean).join('\n');
