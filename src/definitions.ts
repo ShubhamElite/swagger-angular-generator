@@ -60,7 +60,7 @@ function processDefinition(def: Definition, name: string, config: Config): strin
   const properties = _.map(def.properties, (v, k) => processProperty(v, k, name, def.required));
   // conditional import of global types
   if (properties.some(p => !p.native)) {
-    output += `import * as ${conf.modelFile} from \'../${conf.modelFile}\';\n\n`;
+    output += `import * as ${conf.modelFile} from \'../${conf.modelFile}\'\n\n`;
   }
   if (def.description) output += `/** ${def.description} */\n`;
 
@@ -83,7 +83,7 @@ function processDefinition(def: Definition, name: string, config: Config): strin
  * @param def name of the definition file w/o extension
  */
 function createExport(def: string): string {
-  return `export * from './${conf.defsDir}/${def}';`;
+  return `export * from './${conf.defsDir}/${def}'`;
 }
 
 /**

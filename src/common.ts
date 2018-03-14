@@ -31,7 +31,7 @@ export function processProperty(prop: Schema, name = '', namespace = '',
 
     const list = prop.enum || prop.items.enum;
     const exp = exportEnums ? 'export ' : '';
-    enumDeclaration = `${exp}type ${type} =\n` + indent('\'' + list.join('\' |\n\'')) + '\';';
+    enumDeclaration = `${exp}type ${type} =\n` + indent('\'' + list.join('\' |\n\'')) + '\'';
 
     if (prop.type === 'array') type += '[]';
   } else {
@@ -86,7 +86,7 @@ export function processProperty(prop: Schema, name = '', namespace = '',
   // pure type is returned if no name is specified
   if (name) {
     if (name.match(/-/)) name = `'${name}'`;
-    property = `${comment}${name}${optional}: ${type};`;
+    property = `${comment}${name}${optional}: ${type}`;
   } else property = `${type}`;
 
   return {property, enumDeclaration, native};
