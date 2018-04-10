@@ -24,7 +24,7 @@ export class LoginService {
    * create registration credentials
    * http://example.com/swagger/swagger-ui.html#!/Login/Registration
    */
-  login(params: LoginParams): Observable<object> {
+  Registration(params: LoginParams): Observable<object> {
     const formDataParams = {
       loginDto: params.loginDto,
     }

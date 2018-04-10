@@ -40,7 +40,7 @@ export class ProductsService {
    * Get all products
    * http://example.com/swagger/swagger-ui.html#!/Products/Products
    */
-  products(params: ProductsParams): Observable<model.Products> {
+  Products(params: ProductsParams): Observable<model.Products> {
     const queryParamBase = {
       stringField: params.stringField,
       BooleanField: params.BooleanField,

@@ -31,7 +31,7 @@ export class RegistrationService {
    * create registration credentials
    * http://example.com/swagger/swagger-ui.html#!/Registration/Registration
    */
-  registration(params: RegistrationParams): Observable<object> {
+  Registration(params: RegistrationParams): Observable<object> {
     const formDataParams = {
       email: params.email,
       password1: params.password1,

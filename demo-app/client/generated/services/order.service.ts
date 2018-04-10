@@ -59,7 +59,7 @@ export class OrderService {
    * create order
    * http://example.com/swagger/swagger-ui.html#!/Order/Order
    */
-  order(params: OrderParams): Observable<object> {
+  Order(params: OrderParams): Observable<object> {
     const bodyParams = params.orderDto
     const bodyParamsWithoutUndefined: any = {}
     Object.entries(bodyParams || {}).forEach(([key, value]) => {
@@ -88,7 +88,7 @@ export class OrderService {
    * Patches order
    * http://example.com/swagger/swagger-ui.html#!/Order/PatchOrder
    */
-  patchOrder(params: PatchOrderParams): Observable<object> {
+  PatchOrder(params: PatchOrderParams): Observable<object> {
     const pathParams = {
       orderId: params.orderId,
     }
@@ -108,7 +108,7 @@ export class OrderService {
    * Put for order
    * http://example.com/swagger/swagger-ui.html#!/Order/Put-Order
    */
-  putOrder(params: PutOrderParams): Observable<object> {
+  Put-Order(params: PutOrderParams): Observable<object> {
     const pathParams = {
       orderId: params.orderId,
     }

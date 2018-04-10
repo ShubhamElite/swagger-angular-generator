@@ -27,7 +27,7 @@ export class ProductDetailService {
    * Get product detail
    * http://example.com/swagger/swagger-ui.html#!/ProductDetail/ProductDetail
    */
-  productDetail(params: ProductDetailParams): Observable<model.ProductDetail> {
+  ProductDetail(params: ProductDetailParams): Observable<model.ProductDetail> {
     const pathParams = {
       productId: params.productId,
     }

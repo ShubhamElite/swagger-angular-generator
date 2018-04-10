@@ -27,7 +27,7 @@ export class CareerService {
    * get career
    * http://example.com/swagger/swagger-ui.html#!/Career/Career
    */
-  positions(params: PositionsParams): Observable<object> {
+  Career(params: PositionsParams): Observable<object> {
     const pathParams = {
       positionId: params.positionId,
       version: params.version,

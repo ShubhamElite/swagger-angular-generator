@@ -17,7 +17,7 @@ export class LogoutService {
    * Logout - empty post body
    * http://example.com/swagger/swagger-ui.html#!/Logout/Logout
    */
-  logout(): Observable<object> {
+  Logout(): Observable<object> {
     return this.http.post<object>(`/api/logout`, {})
   }
 }

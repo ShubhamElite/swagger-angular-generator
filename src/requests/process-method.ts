@@ -45,7 +45,7 @@ export function processMethod(method: ControllerMethod): MethodOutput {
 
   methodDef += '\n';
   methodDef += makeComment([method.summary, method.description, method.swaggerUrl].filter(Boolean));
-  methodDef += `${method.simpleName}(${paramsSignature}): Observable<${method.responseDef.type}> {\n`;
+  methodDef += `${method.operationId}(${paramsSignature}): Observable<${method.responseDef.type}> {\n`;
 
   // apply the param definitions, e.g. bodyParams
   methodDef += indent(paramSeparation);

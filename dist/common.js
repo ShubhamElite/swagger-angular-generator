@@ -46,7 +46,12 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
             enumDeclaration = `${exp}type ${type} =\n` + utils_1.indent('\'' + list.join('\' |\n\'')) + '\'';
         }
         else {
-            const lines = Object.entries(enumable.enumObj).map(([key, val]) => `${key} = '${val}',`);
+            const lines = Object.entries(enumable.enumObj).map(([key, val]) => {
+                const value = parseInt(val, 10);
+                return isNaN(value)
+                    ? `${key} = '${value}',`
+                    : `${key} = ${value},`;
+            });
             enumDeclaration = `${exp}enum ${type} {\n` + utils_1.indent(lines) + '\n}';
         }
         if (prop.type === 'array')

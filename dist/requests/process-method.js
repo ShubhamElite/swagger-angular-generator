@@ -40,7 +40,7 @@ function processMethod(method) {
     }
     methodDef += '\n';
     methodDef += utils_1.makeComment([method.summary, method.description, method.swaggerUrl].filter(Boolean));
-    methodDef += `${method.simpleName}(${paramsSignature}): Observable<${method.responseDef.type}> {\n`;
+    methodDef += `${method.operationId}(${paramsSignature}): Observable<${method.responseDef.type}> {\n`;
     // apply the param definitions, e.g. bodyParams
     methodDef += utils_1.indent(paramSeparation);
     if (paramSeparation.length)

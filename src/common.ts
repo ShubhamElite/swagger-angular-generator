@@ -57,7 +57,12 @@ export function processProperty(prop: Schema, name = '', namespace = '',
     if (!enumable) {
       enumDeclaration = `${exp}type ${type} =\n` + indent('\'' + list.join('\' |\n\'')) + '\'';
     } else {
-      const lines = Object.entries(enumable.enumObj).map(([key, val]) => `${key} = '${val}',`);
+      const lines = Object.entries(enumable.enumObj).map(([key, val]) => {
+        const value = parseInt(val, 10);
+        return isNaN(value)
+            ? `${key} = '${value}',`
+            : `${key} = ${value},`;
+      });
       enumDeclaration = `${exp}enum ${type} {\n` + indent(lines) + '\n}';
     }
 
