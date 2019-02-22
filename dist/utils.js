@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
-const conf = require("./conf");
+var fs = require("fs");
+var conf = require("./conf");
 /**
  * Checks if directory exists
  * @param path
@@ -33,14 +33,15 @@ exports.createDir = createDir;
  * @param path
  * @param removeSelf whether to remove the directory itself or just its content
  */
-function emptyDir(path, removeSelf = false) {
+function emptyDir(path, removeSelf) {
+    if (removeSelf === void 0) { removeSelf = false; }
     if (!fs.existsSync(path)) {
         if (!removeSelf)
             fs.mkdirSync(path);
         return;
     }
-    fs.readdirSync(path).forEach(file => {
-        const current = `${path}/${file}`;
+    fs.readdirSync(path).forEach(function (file) {
+        var current = path + "/" + file;
         if (fs.lstatSync(current).isDirectory())
             emptyDir(current, removeSelf);
         else
@@ -55,10 +56,11 @@ exports.emptyDir = emptyDir;
  * @param input string (with new-line separation) or array of lines
  * @param level of indentation, takes into account `conf` indentation setting
  */
-function indent(input, level = 1) {
+function indent(input, level) {
+    if (level === void 0) { level = 1; }
     if (Array.isArray(input))
         input = input.join('\n');
-    let res;
+    var res;
     res = input.replace(/^/gm, ' '.repeat(level * conf.indentation));
     res = res.replace(/^\s+$/gm, '');
     return res;
@@ -69,19 +71,21 @@ exports.indent = indent;
  * @param file
  * @param content
  */
-function writeFile(file, content, header = '', fileType = 'ts', disableFlags) {
+function writeFile(file, content, header, fileType, disableFlags) {
+    if (header === void 0) { header = ''; }
+    if (fileType === void 0) { fileType = 'ts'; }
     if (fileType === 'ts') {
         if (!disableFlags)
             disableFlags = ['max-line-length'];
-        let disable = '';
+        var disable = '';
         if (disableFlags.length)
-            disable = `/* tslint:disable:${disableFlags.join(' ')} */\n`;
+            disable = "/* tslint:disable:" + disableFlags.join(' ') + " */\n";
         if (header)
             header += '\n';
-        content = `${disable}${header}${content}`;
+        content = "" + disable + header + content;
     }
     fs.writeFileSync(file, content);
-    out(`${file} generated`, TermColors.green);
+    out(file + " generated", TermColors.green);
 }
 exports.writeFile = writeFile;
 /**
@@ -92,13 +96,13 @@ function makeComment(input) {
     if (Array.isArray(input))
         input = input.join('\n');
     input = input.split('\n');
-    let res = '';
+    var res = '';
     if (input.length > 1) {
-        res = input.map(c => c ? ` * ${c}` : ' *').join('\n');
-        res = `/**\n${res}\n */\n`;
+        res = input.map(function (c) { return c ? " * " + c : ' *'; }).join('\n');
+        res = "/**\n" + res + "\n */\n";
     }
     else if (input.length && input[0]) {
-        res = `/** ${input[0]} */\n`;
+        res = "/** " + input[0] + " */\n";
     }
     return res;
 }
@@ -109,18 +113,19 @@ exports.makeComment = makeComment;
  * @param swaggerUrlPath the path where the swagger ui definition can be found
  * @param version should API version info be included in generated files
  */
-function processHeader(schemaDef, omitVersion = false) {
-    const relevant = {
+function processHeader(schemaDef, omitVersion) {
+    if (omitVersion === void 0) { omitVersion = false; }
+    var relevant = {
         info: schemaDef.info,
         path: schemaDef.host + (schemaDef.basePath || ''),
     };
     if (omitVersion)
         delete relevant.info.version;
-    let res = JSON.stringify(relevant, null, conf.indentation);
+    var res = JSON.stringify(relevant, null, conf.indentation);
     res = res.replace(/^[{}]$/gm, '');
     res = res.replace(/^\s*"[^"]+": [{"]/gm, '');
     res = res.replace(/["}],?$/gm, '');
-    res = res.split('\n').filter(l => l.match(/\w/)).join('\n');
+    res = res.split('\n').filter(function (l) { return l.match(/\w/); }).join('\n');
     return makeComment(res);
 }
 exports.processHeader = processHeader;
@@ -139,8 +144,8 @@ function out(text, color) {
     if (Array.isArray(text))
         text = text.join('\n');
     if (color)
-        text = `${color}${text}${TermColors.default}`;
-    process.stdout.write(`${text}\n`);
+        text = "" + color + text + TermColors.default;
+    process.stdout.write(text + "\n");
 }
 exports.out = out;
 /**
@@ -150,12 +155,16 @@ exports.out = out;
  * @param others
  * @param keys
  */
-function merge(favoured, others, ...keys) {
-    const othersFiltered = others
-        .filter(elem => {
-        return !favoured.find(subElem => keys
-            .map((k) => elem[k] === subElem[k])
-            .every(Boolean));
+function merge(favoured, others) {
+    var keys = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        keys[_i - 2] = arguments[_i];
+    }
+    var othersFiltered = others
+        .filter(function (elem) {
+        return !favoured.find(function (subElem) { return keys
+            .map(function (k) { return elem[k] === subElem[k]; })
+            .every(Boolean); });
     });
     return favoured.concat(othersFiltered);
 }

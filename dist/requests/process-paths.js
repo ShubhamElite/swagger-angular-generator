@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Processing of custom types from `paths` section
  * in the schema
  */
-const _ = require("lodash");
-const conf = require("../conf");
-const utils_1 = require("../utils");
-const process_controller_1 = require("./process-controller");
+var _ = require("lodash");
+var conf = require("../conf");
+var utils_1 = require("../utils");
+var process_controller_1 = require("./process-controller");
 /**
  * Entry point, processes all possible api requests and exports them
  * to files devided ty controllers (same as swagger web app sections)
@@ -18,24 +18,24 @@ const process_controller_1 = require("./process-controller");
  * @param basePath base URL path
  */
 function processPaths(pathsWithParameters, swaggerPath, config, definitions, basePath) {
-    const paths = preProcessPaths(pathsWithParameters);
-    const controllers = _.flatMap(paths, (methods, url) => (_.map(methods, (method, methodName) => ({
-        url,
+    var paths = preProcessPaths(pathsWithParameters);
+    var controllers = _.flatMap(paths, function (methods, url) { return (_.map(methods, function (method, methodName) { return ({
+        url: url,
         name: getName(method),
-        methodName,
+        methodName: methodName,
         simpleName: getSimpleName(url),
         summary: method.summary,
         operationId: method.operationId,
-        swaggerUrl: `${swaggerPath}${method.tags[0]}/${method.operationId}`,
+        swaggerUrl: "" + swaggerPath + method.tags[0] + "/" + method.operationId,
         description: method.description,
         paramDef: method.parameters,
         responses: method.responses,
         responseDef: null,
-        basePath,
-    }))));
-    const controllerFiles = _.groupBy(controllers, 'name');
-    conf.controllerIgnores.forEach(key => delete controllerFiles[key]);
-    _.forEach(controllerFiles, (methods, name) => process_controller_1.processController(methods, name, config, definitions));
+        basePath: basePath,
+    }); })); });
+    var controllerFiles = _.groupBy(controllers, 'name');
+    conf.controllerIgnores.forEach(function (key) { return delete controllerFiles[key]; });
+    _.forEach(controllerFiles, function (methods, name) { return process_controller_1.processController(methods, name, config, definitions); });
 }
 exports.processPaths = processPaths;
 /**
@@ -45,7 +45,7 @@ exports.processPaths = processPaths;
  */
 function getSimpleName(url) {
     // remove url params
-    let method = url.replace(/\/{[^}]+}/g, '');
+    var method = url.replace(/\/{[^}]+}/g, '');
     // remove trailing `/` if present
     method = method.replace(/\/$/, '');
     // take trailing url folder
@@ -69,12 +69,12 @@ function getName(method) {
  * @param paths
  */
 function preProcessPaths(paths) {
-    Object.values(paths).forEach(pathValue => {
+    Object.values(paths).forEach(function (pathValue) {
         if (pathValue.parameters) {
-            Object.keys(pathValue).forEach(key => {
+            Object.keys(pathValue).forEach(function (key) {
                 if (key === 'parameters')
                     return;
-                const method = pathValue[key];
+                var method = pathValue[key];
                 method.parameters = utils_1.merge(method.parameters, pathValue.parameters, 'in', 'name');
             });
         }

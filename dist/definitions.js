@@ -4,11 +4,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Processing of custom types from `definitions` section
  * in the schema
  */
-const _ = require("lodash");
-const path = require("path");
-const common_1 = require("./common");
-const conf = require("./conf");
-const utils_1 = require("./utils");
+var _ = require("lodash");
+var path = require("path");
+var common_1 = require("./common");
+var conf = require("./conf");
+var utils_1 = require("./utils");
 /**
  * Entry point, processes all definitions and exports them
  * to individual files
@@ -17,12 +17,12 @@ const utils_1 = require("./utils");
  */
 function processDefinitions(defs, config) {
     utils_1.emptyDir(path.join(config.dest, conf.defsDir));
-    const definitions = [];
-    const files = {};
-    _.forOwn(defs, (v, source) => {
-        const file = processDefinition(v, source, config);
+    var definitions = [];
+    var files = {};
+    _.forOwn(defs, function (v, source) {
+        var file = processDefinition(v, source, config);
         if (file && file.name) {
-            const previous = files[file.name];
+            var previous = files[file.name];
             if (previous === undefined)
                 files[file.name] = [source];
             else
@@ -30,8 +30,8 @@ function processDefinitions(defs, config) {
             definitions.push(file);
         }
     });
-    let allExports = '';
-    _.forOwn(files, (sources, def) => {
+    var allExports = '';
+    _.forOwn(files, function (sources, def) {
         allExports += createExport(def) + createExportComments(def, sources) + '\n';
     });
     writeToBaseModelFile(config, allExports);
@@ -39,7 +39,7 @@ function processDefinitions(defs, config) {
 }
 exports.processDefinitions = processDefinitions;
 function writeToBaseModelFile(config, allExports) {
-    const filename = path.join(config.dest, `${conf.modelFile}.ts`);
+    var filename = path.join(config.dest, conf.modelFile + ".ts");
     utils_1.writeFile(filename, allExports, config.header);
 }
 exports.writeToBaseModelFile = writeToBaseModelFile;
@@ -50,43 +50,45 @@ exports.writeToBaseModelFile = writeToBaseModelFile;
  */
 function processDefinition(def, name, config) {
     name = common_1.normalizeDef(name);
-    let output = '';
+    var output = '';
     if (def.type === 'array') {
-        const property = common_1.processProperty(def)[0];
+        var property = common_1.processProperty(def)[0];
         if (!property.native) {
-            output += `import * as __${conf.modelFile} from \'../${conf.modelFile}\';\n\n`;
+            output += "import * as __" + conf.modelFile + " from '../" + conf.modelFile + "';\n\n";
         }
         if (def.description)
-            output += `/** ${def.description} */\n`;
-        output += `export type ${name} = ${property.property};\n`;
+            output += "/** " + def.description + " */\n";
+        output += "export type " + name + " = " + property.property + ";\n";
     }
     else if (def.properties || def.additionalProperties) {
-        const properties = common_1.processProperty(def, undefined, name);
+        var properties = common_1.processProperty(def, undefined, name);
         // conditional import of global types
-        if (properties.some(p => !p.native)) {
-            output += `import * as __${conf.modelFile} from \'../${conf.modelFile}\';\n\n`;
+        if (properties.some(function (p) { return !p.native; })) {
+            output += "import * as __" + conf.modelFile + " from '../" + conf.modelFile + "';\n\n";
         }
         if (def.description)
-            output += `/** ${def.description} */\n`;
-        output += `export interface ${name} {\n`;
+            output += "/** " + def.description + " */\n";
+        output += "export interface " + name + " {\n";
         output += utils_1.indent(_.map(properties, 'property').join('\n'));
-        output += `\n}\n`;
+        output += "\n}\n";
         // concat non-empty enum lines
-        const enumLines = _.map(properties, 'enumDeclaration').filter(Boolean).join('\n\n');
+        var enumLines = _.map(properties, 'enumDeclaration').filter(Boolean).join('\n\n');
         if (enumLines)
-            output += `\n${enumLines}\n`;
+            output += "\n" + enumLines + "\n";
     }
     else if (def.type === 'string' && def.enum) {
-        output += `export type ${name} = ${def.enum.map(enumValue => `'${enumValue}'`).join(' | ')};`;
-        output += `\n`;
-        output += `\n`;
-        output += `export const ${name} = {\n`;
-        output += def.enum.map(enumValue => utils_1.indent(`${enumValue.charAt(0).toUpperCase() + enumValue.slice(1)}: '${enumValue}' as ${name},`)).join('\n');
-        output += `\n};\n`;
+        output += "export type " + name + " = " + def.enum.map(function (enumValue) { return "'" + enumValue + "'"; }).join(' | ') + ";";
+        output += "\n";
+        output += "\n";
+        output += "export const " + name + " = {\n";
+        output += def.enum.map(function (enumValue) {
+            return utils_1.indent(enumValue.charAt(0).toUpperCase() + enumValue.slice(1) + ": '" + enumValue + "' as " + name + ",");
+        }).join('\n');
+        output += "\n};\n";
     }
-    const filename = path.join(config.dest, conf.defsDir, `${name}.ts`);
+    var filename = path.join(config.dest, conf.defsDir, name + ".ts");
     utils_1.writeFile(filename, output, config.header);
-    return { name, def };
+    return { name: name, def: def };
 }
 exports.processDefinition = processDefinition;
 /**
@@ -94,7 +96,7 @@ exports.processDefinition = processDefinition;
  * @param def name of the definition file w/o extension
  */
 function createExport(def) {
-    return `export * from './${conf.defsDir}/${def}';`;
+    return "export * from './" + conf.defsDir + "/" + def + "';";
 }
 exports.createExport = createExport;
 /**

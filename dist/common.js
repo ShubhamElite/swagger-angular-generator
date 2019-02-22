@@ -1,22 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = require("lodash");
-const tsutils_1 = require("tsutils");
-const conf = require("./conf");
-const utils_1 = require("./utils");
+var _ = require("lodash");
+var tsutils_1 = require("tsutils");
+var conf = require("./conf");
+var utils_1 = require("./utils");
 /**
  * Processes one property of the type
  * @param prop property definition
  * @param name property name
  * @param namespace usage context for type name uniqueness
  */
-function processProperty(prop, name = '', namespace = '', required = false, exportEnums = true) {
-    let type;
-    let enumDeclaration;
-    let native = true;
-    let isMap = false;
+function processProperty(prop, name, namespace, required, exportEnums) {
+    if (name === void 0) { name = ''; }
+    if (namespace === void 0) { namespace = ''; }
+    if (required === void 0) { required = false; }
+    if (exportEnums === void 0) { exportEnums = true; }
+    var type;
+    var enumDeclaration;
+    var native = true;
+    var isMap = false;
     if (prop.properties) {
-        return _.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required));
+        return _.flatMap(prop.properties, function (v, k) { return processProperty(v, k, namespace, prop.required); });
     }
     if (prop.enum || (prop.items && prop.items.enum)) {
         type = _.upperFirst(name);
@@ -24,14 +28,14 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
         type += _.upperFirst(namespace);
         if (!type.match(/Enum/))
             type += 'Enum';
-        const list = prop.enum || prop.items.enum;
-        const exp = exportEnums ? 'export ' : '';
-        enumDeclaration = `${exp}type ${type} =\n` + utils_1.indent('\'' + list.join('\' |\n\'')) + '\';';
+        var list = prop.enum || prop.items.enum;
+        var exp = exportEnums ? 'export ' : '';
+        enumDeclaration = exp + "type " + type + " =\n" + utils_1.indent('\'' + list.join('\' |\n\'')) + '\';';
         if (prop.type === 'array')
             type += '[]';
     }
     else {
-        let defType;
+        var defType = void 0;
         switch (prop.type) {
             case undefined:
                 defType = translateType(prop.$ref);
@@ -40,17 +44,17 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
             case 'array':
                 defType = translateType(prop.items.type || prop.items.$ref);
                 if (defType.arraySimple)
-                    type = `${defType.type}[]`;
+                    type = defType.type + "[]";
                 else
-                    type = `Array<${defType.type}>`;
+                    type = "Array<" + defType.type + ">";
                 break;
             default:
                 if (prop.additionalProperties) {
-                    const ap = prop.additionalProperties;
-                    let additionalType;
+                    var ap = prop.additionalProperties;
+                    var additionalType = void 0;
                     if (ap.type === 'array') {
                         defType = translateType(ap.items.type || ap.items.$ref);
-                        additionalType = `${defType.type}[]`;
+                        additionalType = defType.type + "[]";
                     }
                     else {
                         defType = translateType(prop.additionalProperties.type ||
@@ -58,7 +62,7 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
                         additionalType = defType.type;
                     }
                     if (name) {
-                        type = `{[key: string]: ${additionalType}}`;
+                        type = "{[key: string]: " + additionalType + "}";
                     }
                     else {
                         name = '[key: string]';
@@ -73,39 +77,39 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
         }
         native = defType.native;
     }
-    let optional = '';
+    var optional = '';
     if (required === false && !isMap)
         optional = '?';
     else if (Array.isArray(required) && !required.includes(name)) {
         optional = '?';
     }
-    let readOnly = '';
+    var readOnly = '';
     if (prop.readOnly)
         readOnly = 'readonly ';
-    const comments = [];
+    var comments = [];
     if (prop.description)
         comments.push(prop.description);
     if (prop.example)
-        comments.push(`example: ${prop.example}`);
+        comments.push("example: " + prop.example);
     if (prop.format)
-        comments.push(`format: ${prop.format}`);
+        comments.push("format: " + prop.format);
     if (prop.default)
-        comments.push(`default: ${prop.default}`);
-    const comment = utils_1.makeComment(comments);
-    let property;
-    let propertyAsMethodParameter;
+        comments.push("default: " + prop.default);
+    var comment = utils_1.makeComment(comments);
+    var property;
+    var propertyAsMethodParameter;
     // pure type is returned if no name is specified
     if (name) {
         if (!isMap)
             name = getAccessor(name);
-        property = `${comment}${readOnly}${name}${optional}: ${type};`;
-        propertyAsMethodParameter = `${name}${optional}: ${type}`;
+        property = "" + comment + readOnly + name + optional + ": " + type + ";";
+        propertyAsMethodParameter = "" + name + optional + ": " + type;
     }
     else {
-        property = `${type}`;
+        property = "" + type;
         propertyAsMethodParameter = property;
     }
-    return [{ property, propertyAsMethodParameter, enumDeclaration, native, isRequired: optional !== '?' }];
+    return [{ property: property, propertyAsMethodParameter: propertyAsMethodParameter, enumDeclaration: enumDeclaration, native: native, isRequired: optional !== '?' }];
 }
 exports.processProperty = processProperty;
 /**
@@ -117,9 +121,9 @@ exports.processProperty = processProperty;
  * @return normalized type name
  */
 function normalizeDef(type) {
-    let res = '';
+    var res = '';
     while (true) {
-        const generic = type.match(/([^«]+)«(.+)»/);
+        var generic = type.match(/([^«]+)«(.+)»/);
         if (!generic) {
             break;
         }
@@ -142,17 +146,17 @@ exports.normalizeDef = normalizeDef;
  */
 function translateType(type) {
     if (type in conf.nativeTypes) {
-        const typeType = type;
+        var typeType = type;
         return {
             type: conf.nativeTypes[typeType],
             native: true,
             arraySimple: true,
         };
     }
-    const subtype = type.match(/^#\/definitions\/(.*)/);
+    var subtype = type.match(/^#\/definitions\/(.*)/);
     if (subtype)
         return resolveDefType(subtype[1]);
-    return { type, native: true, arraySimple: true };
+    return { type: type, native: true, arraySimple: true };
 }
 exports.translateType = translateType;
 /**
@@ -164,7 +168,7 @@ function resolveDefType(type) {
     // check direct native types for definitions and generics
     // does not seem to happen but the function is ready for that
     if (type in conf.nativeTypes) {
-        const typedType = type;
+        var typedType = type;
         return {
             type: conf.nativeTypes[typedType],
             native: true,
@@ -173,26 +177,28 @@ function resolveDefType(type) {
     }
     type = normalizeDef(type);
     return {
-        type: `__${conf.modelFile}.${type}`,
+        type: "__" + conf.modelFile + "." + type,
         native: false,
         arraySimple: true,
     };
 }
-function getAccessor(key, propName = '') {
-    let res = key;
+function getAccessor(key, propName) {
+    if (propName === void 0) { propName = ''; }
+    var res = key;
     if (tsutils_1.isValidPropertyName(key)) {
         if (propName)
-            return `${propName}.${res}`;
+            return propName + "." + res;
         return res;
     }
-    res = `'${res}'`;
+    res = "'" + res + "'";
     if (propName)
-        return `${propName}[${res}]`;
+        return propName + "[" + res + "]";
     return res;
 }
 exports.getAccessor = getAccessor;
-function getObjectPropSetter(key, propName, suffix = '') {
-    return `${getAccessor(key)}: ${getAccessor(key, propName)}${suffix},`;
+function getObjectPropSetter(key, propName, suffix) {
+    if (suffix === void 0) { suffix = ''; }
+    return getAccessor(key) + ": " + getAccessor(key, propName) + suffix + ",";
 }
 exports.getObjectPropSetter = getObjectPropSetter;
 //# sourceMappingURL=common.js.map
