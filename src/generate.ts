@@ -4,10 +4,12 @@ import * as path from 'path';
 
 import * as conf from './conf';
 
-import {addFormExtensions, addUtils} from './common/generate';
-import {processDefinitions} from './definitions';
-import {processPaths} from './requests/process-paths';
-import {createDir, emptyDir, out, processHeader, TermColors} from './utils';
+import axios from 'axios';
+
+import { addFormExtensions, addUtils } from './common/generate';
+import { processDefinitions } from './definitions';
+import { processPaths } from './requests/process-paths';
+import { createDir, emptyDir, processHeader } from './utils';
 
 export interface Config {
   header: string;
@@ -33,37 +35,47 @@ export function generate(
   swaggerUrlPath: string = conf.swaggerUrlPath,
   omitVersion = false) {
 
-  let schema: any;
+  axios.get(src)
+    .then(response => {
+      var schema: any = response.data;
+      // normalize basePath, strip trailing '/'s
+      const basePath = schema.basePath;
+      if (typeof basePath === 'string') {
+        schema.basePath = basePath.replace(/\/+$/, '');
+      } else schema.basePath = '';
 
-  try {
-    const content = fs.readFileSync(src);
-    schema = JSON.parse(content.toString());
-  } catch (e) {
-    if (e instanceof SyntaxError) {
-      out(`${src} is either not a valid JSON scheme or contains non-printable characters`, TermColors.red);
-    } else out(`JSON scheme file '${src}' does not exist`, TermColors.red);
+      recreateDirectories(dest, generateStore);
 
-    out(`${e}`);
-    return;
-  }
+      const header = processHeader(schema, omitVersion);
+      const config: Config = { header, dest, generateStore, unwrapSingleParamMethods };
 
-  // normalize basePath, strip trailing '/'s
-  const basePath = schema.basePath;
-  if (typeof basePath === 'string') {
-    schema.basePath = basePath.replace(/\/+$/, '');
-  } else schema.basePath = '';
+      generateCommon(path.join(dest, conf.commonDir), generateStore);
 
-  recreateDirectories(dest, generateStore);
+      if (!fs.existsSync(dest)) fs.mkdirSync(dest);
+      const definitions = processDefinitions(schema.definitions, config);
+      processPaths(schema.paths, `http://${schema.host}${swaggerUrlPath}${conf.swaggerFile}`,
+        config, definitions, schema.basePath);
 
-  const header = processHeader(schema, omitVersion);
-  const config: Config = {header, dest, generateStore, unwrapSingleParamMethods};
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error);
+    });
 
-  generateCommon(path.join(dest, conf.commonDir), generateStore);
-
-  if (!fs.existsSync(dest)) fs.mkdirSync(dest);
-  const definitions = processDefinitions(schema.definitions, config);
-  processPaths(schema.paths, `http://${schema.host}${swaggerUrlPath}${conf.swaggerFile}`,
-               config, definitions, schema.basePath);
 }
 
 function recreateDirectories(dest: string, generateStore: boolean) {

@@ -14,7 +14,7 @@
     "start:debug": "node -r ts-node/register --inspect-brk src/index.ts",
     "prebuild": "del-cli dist",
     "build": "tsc --outDir dist && cpy templates/** ./../../dist/common/ --cwd=src/common --parents",
-    "postbuild": "yarn run generate",
+    "postbuilddonotrun": "yarn run generate",
     "preversion": "yarn run build",
     "postversion": "git status",
     "generate": "cd demo-app/client && yarn run generate",
@@ -43,12 +43,15 @@
   "homepage": "https://github.com/jnwltr/swagger-angular-generator#readme",
   "dependencies": {
     "@types/lodash": "^4.14.121",
+    "axios": "^0.18.0",
     "commander": "^2.18.0",
     "cpy-cli": "^2.0.0",
     "del-cli": "^1.1.0",
     "file-system": "^2.2.2",
+    "http-client": "^4.3.1",
     "lodash": "^4.17.11",
-    "tsutils": "^2.12.1"
+    "tsutils": "^2.12.1",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@angular/common": "^5.2.8",
