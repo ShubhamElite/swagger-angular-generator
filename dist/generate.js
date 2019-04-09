@@ -33,8 +33,10 @@ function generate(src, dest, generateStore, unwrapSingleParamMethods, swaggerUrl
         if (typeof basePath === 'string') {
             schema.basePath = basePath.replace(/\/+$/, '');
         }
-        else
-            schema.basePath = '';
+        else {
+            schema.basePath = (schema.schemes[0] || 'http') + '://' + (schema.host || 'localhost');
+            schema.basePath = schema.basePath.replace(/\/+$/, '');
+        }
         recreateDirectories(dest, generateStore);
         var header = utils_1.processHeader(schema, omitVersion);
         var config = { header: header, dest: dest, generateStore: generateStore, unwrapSingleParamMethods: unwrapSingleParamMethods };

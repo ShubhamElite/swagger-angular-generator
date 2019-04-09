@@ -13,7 +13,7 @@ exports.indentation = 2;
 exports.swaggerUrlPath = '/swagger';
 exports.omitVersion = false;
 // part of path in url
-exports.swaggerFile = '/swagger-ui.html#!/';
+exports.swaggerFile = '/index.html#!/';
 // mapping from swagger native types to javascript types
 exports.nativeTypes = {
     binary: 'number',

@@ -14,7 +14,7 @@ export const indentation = 2;
 export const swaggerUrlPath = '/swagger';
 export const omitVersion = false;
 // part of path in url
-export const swaggerFile = '/swagger-ui.html#!/';
+export const swaggerFile = '/index.html#!/';
 
 // mapping from swagger native types to javascript types
 export const nativeTypes: {[key in NativeNames]: string} = {

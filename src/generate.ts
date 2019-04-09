@@ -42,7 +42,10 @@ export function generate(
       const basePath = schema.basePath;
       if (typeof basePath === 'string') {
         schema.basePath = basePath.replace(/\/+$/, '');
-      } else schema.basePath = '';
+      } else {
+        schema.basePath = (schema.schemes[0] || 'http') + '://' + (schema.host || 'localhost');
+        schema.basePath = schema.basePath.replace(/\/+$/, '');
+      }
 
       recreateDirectories(dest, generateStore);
 
